@@ -1,0 +1,44 @@
+{
+  "name": "battleship",
+  "jest": {
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
+  },
+  "version": "1.0.0",
+  "description": "The Odin Project Battleship Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test watch": "jest --watchAll",
+    "build": "webpack",
+    "build watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmonomania/battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmonomania/battleship/issues"
+  },
+  "homepage": "https://github.com/dmonomania/battleship#readme",
+  "devDependencies": {
+    "css-loader": "^6.3.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "jest": "^27.2.4",
+    "jest-extended": "^1.0.0",
+    "pubsub-js": "^1.9.3",
+    "style-loader": "^3.3.0",
+    "webpack": "^5.56.1"
+  },
+  "testMatch": [
+    "<rootDir>/src/**/*.(test).{js,jsx,ts,tsx}",
+    "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
+  ]
+}
