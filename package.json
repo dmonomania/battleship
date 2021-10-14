@@ -26,19 +26,24 @@
   },
   "homepage": "https://github.com/dmonomania/battleship#readme",
   "devDependencies": {
-    "css-loader": "^6.3.0",
+    "css-loader": "^6.4.0",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
+    "html-webpack-plugin": "^5.3.2",
     "jest": "^27.2.4",
     "jest-extended": "^1.0.0",
     "pubsub-js": "^1.9.3",
     "style-loader": "^3.3.0",
-    "webpack": "^5.56.1"
+    "webpack": "^5.58.2",
+    "webpack-cli": "^4.9.0"
   },
   "testMatch": [
     "<rootDir>/src/**/*.(test).{js,jsx,ts,tsx}",
     "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
-  ]
+  ],
+  "dependencies": {
+    "eslint-plugin-jest": "^25.0.5"
+  }
 }

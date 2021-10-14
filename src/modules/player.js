@@ -15,7 +15,7 @@ function player() {
 function computerPlayer() {
   const basePlayer = Object.assign(player());
 
-  const possibleTargets = (function possibleTargetsFunction() {
+  const possibleTargets = (() => {
     const yAxis = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     const finalArray = [];
     yAxis.forEach((letter) => {
@@ -53,13 +53,14 @@ function computerPlayer() {
     }
     let gridToAttack = randomGridNumber();
     do {
+      gridToAttack = randomGridNumber();
       const gridCheck = previouslyAttackedTargets.find((e) => e === gridToAttack);
       if (gridCheck !== undefined) {
         break;
       } else {
         validAttackLocation = true;
       }
-    } while ((validAttackLocation = false));
+    } while (validAttackLocation === false);
 
     return gridToAttack;
   }
