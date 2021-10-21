@@ -1,7 +1,9 @@
-import { possibleTargets, createGrid } from './modules/DOM-gameboard';
+import { addClickListeners, createComputerBoard, createPlayerBoard } from './modules/DOM-gameboard';
 
 const gameLoop = require('./modules/game-loop');
 const PubSub = require('pubsub-js');
 
-createGrid(possibleTargets);
+createComputerBoard();
+createPlayerBoard();
+addClickListeners();
 gameLoop();

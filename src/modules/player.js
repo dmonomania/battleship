@@ -30,7 +30,7 @@ function computerPlayer() {
   // TODO - set up the computer attack to be a little smarter
   const smartNextChoice = [];
 
-  function attack() {
+  function attack(targetUser) {
     if (possibleTargets.length === 0) {
       throw new Error('No more targets');
     }
@@ -41,8 +41,11 @@ function computerPlayer() {
     possibleTargets.splice(attackLocationNumber, 1);
     previouslyAttackedTargets.push(attackLocationNumber);
 
-    const pubSubTopic = 'attack.fromComputer';
-    PubSub.publish(pubSubTopic, attackGridLocation);
+    const pubSubTopic = 'send-attack';
+
+    setTimeout(() => {
+      PubSub.publish('send-attack', { name: targetUser, attackGridLocation });
+    }, 1000);
   }
 
   function chooseGridLocation() {
@@ -65,10 +68,19 @@ function computerPlayer() {
     return gridToAttack;
   }
 
+  // const myTurnSequence = (topic, data) => {
+  //   console.log(this);
+  //   if (data.name !== this.name) {
+  //     attack();
+  //   }
+  // };
+
+  // PubSub.subscribe('my-turn', myTurnSequence);
+
   return {
     ...basePlayer,
     attack,
   };
 }
 
-module.exports = { computerPlayer: computerPlayer, player: player };
+module.exports = { computerPlayer, player };

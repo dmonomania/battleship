@@ -10,19 +10,64 @@ const allShipVariations = [
   { name: 'Destoyer', length: 2 },
 ];
 
-const userPlayer = playerFactory.player();
+const userPlayer = playerFactory.computerPlayer();
 const computerPlayer = playerFactory.computerPlayer();
-const userGameBoard = gameBoard.baseGameBoard();
+const userGameBoard = gameBoard.computerGameBoard();
 const computerGameBoard = gameBoard.computerGameBoard();
 
 let whosTurnIsIt = 'player1';
 
 function startGame() {
+  // set names
+  computerGameBoard.name = 'computer';
+  computerPlayer.name = 'computer';
+  userPlayer.name = 'user';
+  userGameBoard.name = 'user';
+
   /// set player turn (random);
   /// build DOM stuff
   allShipVariations.forEach((ship) => {
     computerGameBoard.placeComputerShips(ship.name, ship.length);
+    userGameBoard.placeComputerShips(ship.name, ship.length);
   });
+
+  computerGameBoard.receiveAttack('A1');
 }
 
+function turnSequence() {
+  // check turn
+  // attack
+  // check if any ships left
+  // update turn
+}
+
+const attack = () => {};
+
+function handleReceivedAttack(topic, data) {
+  console.log(data);
+  if (data.didItHit === true && data.areThereStillShips === false) {
+    alert(`${data.gameBoardName} has lost all their ships`);
+  } else {
+    sendAttack(data.gameBoardName);
+  }
+
+  function sendAttack(name) {
+    if (name === userGameBoard.name) {
+      //userPlayer.attack(userGameBoard.name);
+    } else {
+      computerPlayer.attack(computerGameBoard.name);
+    }
+  }
+}
+
+function handleSendAttack(topic, data) {
+  if (data.name === userGameBoard.name) {
+    computerGameBoard.receiveAttack(data.attackGridLocation);
+  } else {
+    userGameBoard.receiveAttack(data.attackGridLocation);
+  }
+}
+
+PubSub.subscribe('received-attack', handleReceivedAttack);
+PubSub.subscribe('send-attack', handleSendAttack);
 module.exports = startGame;

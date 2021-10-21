@@ -13,12 +13,12 @@ function newShip(name, shiplength, locationArray = []) {
     location: location,
     numberOfHits: 0,
     isSunk() {
-      return this.numberOfHits === shiplength ? true : false;
+      return this.numberOfHits === shiplength;
     },
     hit(gridsquare) {
       this.location[gridsquare] = true;
       this.numberOfHits += 1;
-      return 'Hit';
+      return `Hit ${gridsquare}`;
     },
   };
 }

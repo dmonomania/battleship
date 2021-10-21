@@ -7,36 +7,47 @@ function baseGameBoard() {
     ships: [],
     attackedSpaces: [],
     occupiedSpaces: [],
+    sliceShip(arrayIndex) {
+      console.log(arrayIndex);
+      this.ships.splice(arrayIndex, 1);
+    },
 
-    receiveAttack(gridlocation) {
-      const attackedAlready = this.attackedSpaces.find((e) => e === gridlocation);
-      if (attackedAlready !== undefined) {
-        throw new Error('This space has already been attacked');
-      }
+    receiveAttack(gridLocation) {
+      const attackedAlready = this.attackedSpaces.find((e) => e === gridLocation);
+      if (attackedAlready === undefined) {
+        // console.log(this);
+        this.attackedSpaces.push(gridLocation);
 
-      this.attackedSpaces.push(gridlocation);
+        const gridMatcher = (ship) => ship.location[gridLocation] !== undefined;
 
-      for (let i = 0; i < this.ships.length; i++) {
-        if (this.ships[i].location[gridlocation] === undefined) {
-          if (i < this.ships.length - 1) {
-            continue;
-          } else {
-            let message = 'You missed';
-            return message;
-            /// pubsub.publish something here
-          }
-        } else {
-          this.ships[i].hit(gridlocation);
-          // update the dom here pubsub publish something
-          const hasItSunk = this.ships[i].isSunk();
-          if (hasItSunk === true) {
-            this.ships.slice(i, 1);
-            // pubsub something here
-          }
-          let message = 'You Hit';
-          return message;
-          break;
+        const didItHit = this.ships.some(gridMatcher);
+
+        const shipHitIndex = didItHit === true ? this.ships.findIndex(gridMatcher) : null;
+
+        const hitTheShip = didItHit === true ? this.ships[shipHitIndex].hit(gridLocation) : null;
+        // const hasItSunk = this.?ships[shipHitIndex].?isSunk();
+        const hasItSunk = didItHit === true ? this.ships[shipHitIndex].isSunk() : null;
+        console.log(hasItSunk);
+
+        const shipName = didItHit === true ? this.ships[shipHitIndex].name : null;
+
+        if (hasItSunk === true) {
+          console.log('tried to slice');
+          this.sliceShip(shipHitIndex);
         }
+
+        const areThereStillShips = this.anyShipsLeft();
+        console.log(this.ships.length);
+
+        PubSub.publish('received-attack', {
+          shipHitIndex,
+          didItHit,
+          hasItSunk,
+          shipName,
+          areThereStillShips,
+          gameBoardName: this.name,
+          gridLocation,
+        });
       }
     },
 
@@ -44,10 +55,10 @@ function baseGameBoard() {
       const ship = newShip(name, length, gridArray);
       gridArray.forEach((e) => this.occupiedSpaces.push(e));
       this.ships.push(ship);
-      PubSub.publish('new-ship', ['computer', gridArray, name]);
+      PubSub.publish('new-ship', [this.name, gridArray, name]);
     },
     anyShipsLeft() {
-      return this.ships.length === 0 ? false : true;
+      return this.ships.length !== 0;
     },
   };
 }
