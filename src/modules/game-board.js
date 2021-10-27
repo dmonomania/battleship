@@ -8,14 +8,12 @@ function baseGameBoard() {
     attackedSpaces: [],
     occupiedSpaces: [],
     sliceShip(arrayIndex) {
-      console.log(arrayIndex);
       this.ships.splice(arrayIndex, 1);
     },
 
     receiveAttack(gridLocation) {
       const attackedAlready = this.attackedSpaces.find((e) => e === gridLocation);
       if (attackedAlready === undefined) {
-        // console.log(this);
         this.attackedSpaces.push(gridLocation);
 
         const gridMatcher = (ship) => ship.location[gridLocation] !== undefined;
@@ -84,9 +82,9 @@ function computerGameBoard() {
     return finalArray;
   }
 
-  function pickStartPoint(array) {
-    const startPoint = Math.floor(Math.random() * array.length);
-    return array[startPoint];
+  function pickStartPoint(validGridArray) {
+    const startPoint = Math.floor(Math.random() * validGridArray.length);
+    return validGridArray[startPoint];
   }
 
   function startPointToFullShipGrid(startPoint, shipLength, chosenAxis) {
@@ -136,16 +134,3 @@ function computerGameBoard() {
 }
 
 module.exports = { baseGameBoard, computerGameBoard };
-
-// const allShipVariations = [
-//   { name: 'Aircraft-Carier', length: 5 },
-//   { name: 'Battleship', length: 4 },
-//   { name: 'Submarine', length: 3 },
-//   { name: 'Cruiser', length: 3 },
-//   { name: 'Destoyer', length: 2 },
-// ];
-
-// const computerthingy = computerGameBoard();
-// allShipVariations.forEach((ship) => {
-//   computerthingy.placeComputerShips(ship.name, ship.length);
-// });

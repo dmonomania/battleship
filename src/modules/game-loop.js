@@ -30,8 +30,6 @@ function startGame() {
     computerGameBoard.placeComputerShips(ship.name, ship.length);
     userGameBoard.placeComputerShips(ship.name, ship.length);
   });
-
-  computerGameBoard.receiveAttack('A1');
 }
 
 function turnSequence() {

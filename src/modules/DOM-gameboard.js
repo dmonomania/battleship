@@ -1,4 +1,5 @@
 const PubSub = require('pubsub-js');
+const gameBoardLogic = require('./game-board-logic');
 
 const computerGameBoard = document.querySelector('#computer-game-board');
 const playerGameBoard = document.querySelector('#player-game-board');
@@ -26,9 +27,8 @@ function createGrid(user, gameboard, array) {
 const messageFromCheck = (messageFrom) => {
   if (messageFrom === 'computer') {
     return document.querySelectorAll('.computer');
-  } else {
-    return document.querySelectorAll('.user');
   }
+  return document.querySelectorAll('.user');
 };
 
 function handleNewShip(topic, data) {
@@ -64,20 +64,56 @@ function handleReceivedAttackDOM(topic, data) {
   });
 }
 
-function handleClick(event) {
-  event.path[0].removeEventListener('click', handleClick);
-  // console.log(event);
+function handleAttackClick(event) {
   const attackGridLocation = event.path[0].dataset.grid;
   PubSub.publish('send-attack', { name: 'user', attackGridLocation });
-  // disable click
-  // disable hover
-  // send attack PubSub
 }
 
-function addClickListeners() {
-  const gridArray = document.querySelectorAll('.computer');
-  gridArray.forEach((grid) => {
-    grid.addEventListener('click', handleClick);
+function addShips() {}
+
+function computerBoardEventManager(enableDisable) {
+  const gridContainer = document.getElementById('computer-game-board');
+  if (enableDisable) {
+    return gridContainer.addEventListener('click', handleAttackClick);
+  }
+  return gridContainer.removeEventListener('click', handleAttackClick);
+}
+
+function playerBoardEventManager(enableDisable) {
+  const gridContainer = document.getElementById('player-game-board');
+  if (enableDisable) {
+    return gridContainer.addEventListener('click', addShips);
+  }
+  return gridContainer.removeEventListener('click', addShips);
+}
+
+function mouseOut(e, ship) {
+  const { target } = e;
+  const validPlacementArray = gameBoardLogic.validPlacementArray(5, 'xAxis');
+
+  if (target.id !== 'player-game-board') {
+    target.classList.remove('black');
+  }
+
+  console.log(target);
+}
+
+function mouseOver(e, ship) {
+  const { target } = e;
+
+  if (target.id !== 'player-game-board') {
+    target.classList.add('black');
+  }
+}
+
+function addShipsMouseOverEvents(enableDisable, currentShip) {
+  const gridContainer = document.getElementById('player-game-board');
+  gridContainer.addEventListener('mouseover', function doSomething(e) {
+    mouseOver(e, currentShip);
+  });
+
+  gridContainer.addEventListener('mouseout', function dosomething(e) {
+    mouseOut(e, currentShip);
   });
 }
 
@@ -87,4 +123,11 @@ PubSub.subscribe('received-attack', handleReceivedAttackDOM);
 const createComputerBoard = () => createGrid('computer', computerGameBoard, possibleTargets);
 const createPlayerBoard = () => createGrid('user', playerGameBoard, possibleTargets);
 
-export { createComputerBoard, createPlayerBoard, addClickListeners };
+addShipsMouseOverEvents();
+
+export {
+  createComputerBoard,
+  createPlayerBoard,
+  playerBoardEventManager,
+  computerBoardEventManager,
+};
